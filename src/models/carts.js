@@ -12,4 +12,4 @@ export const CartSchema = new Schema({
     methods:{}
 })
 
-export const dbCart = model("cart", CartSchema)
+export const dbCart = model("carrito", CartSchema)

@@ -18,3 +18,19 @@ sessionRouter.post('/',
                 message: 'login failed'
             })
     })
+
+sessionRouter.get("/current", (req, res) => {
+           if (req.isAuthenticated()) {
+          return res.send("Bienvenido " + req.user.first_name)
+        }
+        res.status(400).json({ status: 'error', message: 'no hay una sesion iniciada' })
+      })
+
+sessionRouter.delete('/current', (req, res) => {
+        req.logout(err => {
+          if (err) {
+            return res.status(500).json({ status: 'logout error', body: err })
+          }
+          res.json({ status: 'success', message: 'logout OK' })
+        })
+      })

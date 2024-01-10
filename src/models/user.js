@@ -10,7 +10,7 @@ export const UserSchema = new Schema({
     email:{type: String, unique: true, required: true},
     age: {type: Number},
     password: {type:String, required: true},
-    cartId: {type: String, ref: "cart"},
+    cart: [ {type: String, ref: "carrito"}],
     role: {type:String, default: "user"}
 },{
     strict: "throw",
@@ -18,7 +18,6 @@ export const UserSchema = new Schema({
         registrar: async function (reqBody) {
           
             reqBody.password = hashear(reqBody.password)
-            reqBody.cartId = await UserManager.findById(_id).populate("cartId").lean()
             const creado = await model("Users").create(reqBody)
       
             const datosUsuario = {
@@ -26,7 +25,7 @@ export const UserSchema = new Schema({
               first_name: creado.first_name,
               last_name: creado.last_name,
               role: creado.role,
-              cartId: creado.cartId
+              cart: creado.cart
             }
       
             return datosUsuario
@@ -44,7 +43,7 @@ export const UserSchema = new Schema({
                 role: 'admin'
               }
             } else {
-              const usuario = await model("usuarios").findOne({ email: username }).lean()
+              const usuario = await model("Users").findOne({ email: username }).lean()
       
               if (!usuario) {
                 throw new Error('usuario no encontrado')
@@ -58,7 +57,7 @@ export const UserSchema = new Schema({
                 email: usuario['email'],
                 first_name: usuario['first_name'],
                 last_name: usuario['last_name'],
-                cartId: usuario['cartId'],
+                cart: usuario['cart'],
                 role: usuario['role'],
               }
             }
